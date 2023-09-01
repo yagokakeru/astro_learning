@@ -1,0 +1,52 @@
+---
+const menuList = [
+    {
+        name: 'About',
+        href: '/about'
+    },
+    {
+        name: 'News',
+        href: '/news'
+    }
+]
+---
+
+<style>
+    .header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 5%;
+        padding-right: 5%;
+        width: 100%;
+        height: 55px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+    }
+
+    .logo{
+        display: block;
+        font-size: 22px;
+    }
+
+    .menu{
+        display: flex;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .list{
+        font-size: 14px;
+    }
+</style>
+
+<header class="header">
+    <a class="logo" href="/">✌️</a>
+    <ul class="menu">
+        {menuList.map(item => {
+            return <a class="link" href={item.href}><li class="list">{item.name}</li></a>;
+        })}
+    </ul>
+</header>

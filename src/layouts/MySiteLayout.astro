@@ -1,0 +1,25 @@
+---
+// Styles
+import '../global.css';
+
+// Fonts
+import '@fontsource-variable/noto-sans-jp';
+
+// Components
+import Head from '../components/base/Head.astro';
+import Header from '../components/base/Header.astro';
+
+/**
+ * Setting
+ */
+const props = Astro.props;
+
+---
+
+<html lang="ja">
+	<Head title={props.title} pagePath={props.pagePath} />
+	<body>
+		<Header />
+		<slot />
+	</body>
+</html>

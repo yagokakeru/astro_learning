@@ -1,0 +1,33 @@
+---
+const props = Astro.props;
+const title = (props.title) ? `${props.title} - Astroやってみた` : 'Astroやってみた';
+const pagePath = props.pagePath;
+---
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!-- <meta name="generator" content={Astro.generator} /> -->
+    <title>{title}</title>
+    <meta name="description" content="【朗報】イッチがAstroでWebサイトを作った結果www" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- favicon/webclipicon -->
+    <link rel="icon" href="favicon.ico" />
+    <!-- <link rel="icon" href="favicon.svg" type="image/svg+xml"> -->
+    <link rel="apple-touch-icon" href="webclip.png" />
+
+    <!-- ogp -->
+    <meta property="og:site_name" content="Astroやってみた" />
+    <meta property="og:url" content=`http://localhost:4321${pagePath}` />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content="【朗報】イッチがAstroでWebサイトを作った結果www" />
+    <meta property="og:image" content="http://localhost:4321/ogp.jpg" />
+    <meta property="og:locale" content="ja_JP" />
+    <!-- <meta property="fb:app_id" content="AppID"> -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- <meta name="twitter:site" content="@moshamusha2010" /> -->
+    <meta name="twitter:description" content="【朗報】イッチがAstroでWebサイトを作った結果www" />
+    <meta name="twitter:image:src" content="http://localhost:4321/ogp.jpg" />
+</head>
