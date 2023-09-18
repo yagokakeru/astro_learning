@@ -1,6 +1,6 @@
 import { isRemotePath } from '@astrojs/internal-helpers/path';
 import mime from 'mime/lite.js';
-import { g as getConfiguredImageService, i as imageConfig, a as isRemoteAllowed } from './_id_.astro.4c07a0f1.mjs';
+import { g as getConfiguredImageService, i as imageConfig, a as isRemoteAllowed } from './_id_.astro.d5ca79c9.mjs';
 /* empty css                           */import '../astro.2331e574.mjs';
 import 'clsx';
 import 'html-escaper';

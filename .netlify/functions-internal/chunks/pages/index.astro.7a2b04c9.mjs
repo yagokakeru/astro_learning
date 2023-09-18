@@ -1,6 +1,6 @@
 /* empty css                           */import { c as createAstro, b as createComponent, r as renderTemplate, m as maybeRenderHead, g as renderComponent, e as addAttribute } from '../astro.2331e574.mjs';
 import 'clsx';
-import { $ as $$Image, b as getBlogs, c as $$MySiteLayout } from './_id_.astro.4c07a0f1.mjs';
+import { $ as $$Image, b as getBlogs, c as $$MySiteLayout } from './_id_.astro.d5ca79c9.mjs';
 import '@astrojs/internal-helpers/path';
 
 const $$Astro$6 = createAstro();

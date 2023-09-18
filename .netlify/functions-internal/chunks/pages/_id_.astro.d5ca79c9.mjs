@@ -194,7 +194,7 @@ async function getConfiguredImageService() {
   if (!globalThis?.astroAsset?.imageService) {
     const { default: service } = await import(
       // @ts-expect-error
-      '../sharp.9f5cb217.mjs'
+      '../sharp.c19d45c1.mjs'
     ).catch((e) => {
       const error = new AstroError(InvalidImageService);
       error.cause = e;
@@ -306,15 +306,6 @@ const getBlogDetail = async (contentId, queries) => {
   });
 };
 
-const dateFormat = (date) => {
-  const dateFormat2 = new Date(date).toLocaleDateString("ja-JP", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  }).split("/").join(".");
-  return dateFormat2;
-};
-
 const $$Astro = createAstro();
 async function getStaticPaths() {
   const response = await getBlogs({ fields: ["id"] });
@@ -329,7 +320,8 @@ const $$id = createComponent(async ($$result, $$props, $$slots) => {
   Astro2.self = $$id;
   const { id } = Astro2.params;
   const blog = await getBlogDetail(id);
-  return renderTemplate`${renderComponent($$result, "MySiteLayout", $$MySiteLayout, { "title": blog.title, "pagePath": `/news/${id}`, "data-astro-cid-zoshki4t": true }, { "default": ($$result2) => renderTemplate`${maybeRenderHead()}<div class="w-4/5 max-w-5xl mx-auto py-40" data-astro-cid-zoshki4t><h1 class="text-4xl font-bold" data-astro-cid-zoshki4t>${blog.title}</h1><div class="flex items-center mt-6" data-astro-cid-zoshki4t><p class="text-gray-400 text-xs" data-astro-cid-zoshki4t>公開日：${dateFormat(blog.publishedAt)}</p><p class="text-gray-400 text-xs ml-3.5" data-astro-cid-zoshki4t>最終更新日：${dateFormat(blog.updatedAt)}</p></div><div class="flex items-center mt-2.5" data-astro-cid-zoshki4t>${blog.category.map((cate) => {
+  return renderTemplate`${renderComponent($$result, "MySiteLayout", $$MySiteLayout, { "title": blog.title, "pagePath": `/news/${id}`, "data-astro-cid-zoshki4t": true }, { "default": ($$result2) => renderTemplate`${maybeRenderHead()}<div class="w-4/5 max-w-5xl mx-auto py-40" data-astro-cid-zoshki4t><h1 class="text-4xl font-bold" data-astro-cid-zoshki4t>${blog.title}</h1><div class="flex items-center mt-6" data-astro-cid-zoshki4t><!-- <p class="text-gray-400 text-xs">公開日：{dateformat(blog.publishedAt)}</p>
+			<p class="text-gray-400 text-xs ml-3.5">最終更新日：{dateformat(blog.updatedAt)}</p> --></div><div class="flex items-center mt-2.5" data-astro-cid-zoshki4t>${blog.category.map((cate) => {
     return renderTemplate`<p class="rounded border border-gray-400 p-1 text-xs bg-gray-100 mr-2.5" data-astro-cid-zoshki4t>${cate}</p>`;
   })}</div>${blog.thumbnail && renderTemplate`${renderComponent($$result2, "Image", $$Image, { "class": "w-full mt-12", "src": blog.thumbnail.url, "alt": "\u30B5\u30E0\u30CD\u30A4\u30EB", "width": blog.thumbnail.width, "height": blog.thumbnail.height, "data-astro-cid-zoshki4t": true })}`}<div class="content mt-24 text-base leading-loose" data-astro-cid-zoshki4t>${unescapeHTML(blog.content)}</div></div>` })}`;
 }, "/Users/kakeru/Desktop/astro_learning/src/pages/news/[id].astro", void 0);
