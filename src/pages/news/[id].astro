@@ -1,28 +1,53 @@
 ---
+// Components
+import MySiteLayout from '../../layouts/MySiteLayout.astro';
+import { Image } from 'astro:assets';
+
+// Function
+import { getBlogs, getBlogDetail } from '../../functions/microcms';
+import { dateFormat } from '../../functions/dateFormat';
+
 export async function getStaticPaths() {
-    return [
-        {params: {id: 'chrome'}},
-        {params: {id: 'safari'}},
-        {params: {id: 'firefox'}},
-        {params: {id: 'brave'}},
-        {params: {id: 'microsoft_edge'}},
-        {params: {id: 'internet_explorer'}},
-        {params: {id: 'opera'}},
-    ];
+	const response = await getBlogs({ fields: ['id'] });
+	return response.contents.map((content: any) => ({
+		params: {
+			id: content.id
+		}
+	}));
 }
 
 const { id } = Astro.params;
+const blog = await getBlogDetail(id as string);
+
+console.log(blog);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>{id}記事ページ</h1>
-	</body>
-</html>
+<style>
+	.content h1{
+		font-size: 24px;
+		font-weight: 700;
+	}
+
+	.content a{
+		color: blue;
+	}
+</style>
+
+<MySiteLayout title={blog.title} pagePath={`/news/${id}`}>
+	<div class="w-4/5 max-w-5xl mx-auto py-40">
+		<h1 class="text-4xl font-bold">{blog.title}</h1>
+		<div class="flex items-center mt-6">
+			<p class="text-gray-400 text-xs">公開日：{dateFormat(blog.publishedAt)}</p>
+			<p class="text-gray-400 text-xs ml-3.5">最終更新日：{dateFormat(blog.updatedAt)}</p>
+		</div>
+		<div class="flex items-center mt-2.5">
+			{
+				blog.category.map(cate => {
+					return <p class="rounded border border-gray-400 p-1 text-xs bg-gray-100 mr-2.5">{cate}</p>;
+				})
+			}
+		</div>
+		{(blog.thumbnail) && <Image class="w-full mt-12" src={blog.thumbnail.url} alt="サムネイル" width={blog.thumbnail.width} height={blog.thumbnail.height} />}
+		<div class="content mt-24 text-base leading-loose" set:html={blog.content}></div>
+	</div>
+</MySiteLayout>

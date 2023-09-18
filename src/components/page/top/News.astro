@@ -1,12 +1,22 @@
 ---
+// Function
+import { getBlogs } from "../../../functions/microcms";
+
+// Setting
+const response = await getBlogs({ fields: ['id', 'title'] });
 ---
 
 <section class="bg-gray-700 py-36">
     <ul class="mx-auto w-11/12">
+        {
+            response.contents.map((content: any, index: number) => {
+                return <a class={`border-t ${(response.contents.length - 1 === index) && 'border-b'} border-white border-solid block text-[2vw] py-8 text-white`} href={`news/${content.id}`}><li>{content.title}</li></a>
+            })
+        }
+        <!-- <a class="border-t border-white border-solid block text-[2vw] py-8 text-white" href=""><li>Webサイトを公開しました。</li></a>
         <a class="border-t border-white border-solid block text-[2vw] py-8 text-white" href=""><li>Webサイトを公開しました。</li></a>
         <a class="border-t border-white border-solid block text-[2vw] py-8 text-white" href=""><li>Webサイトを公開しました。</li></a>
         <a class="border-t border-white border-solid block text-[2vw] py-8 text-white" href=""><li>Webサイトを公開しました。</li></a>
-        <a class="border-t border-white border-solid block text-[2vw] py-8 text-white" href=""><li>Webサイトを公開しました。</li></a>
-        <a class="border-t border-b border-white border-solid block text-[2vw] py-8 text-white" href=""><li>Webサイトを公開しました。</li></a>
+        <a class="border-t border-b border-white border-solid block text-[2vw] py-8 text-white" href=""><li>Webサイトを公開しました。</li></a> -->
     </ul>
 </section>
