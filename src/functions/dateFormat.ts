@@ -5,7 +5,7 @@
  * 
  * @param date string maicroCMSから取得した日付
  */
-export function dateFormat(date: string) {
+export const dateFormat = (date: string) => {
     const dateFormat =  new Date(date).toLocaleDateString('ja-JP',{
 		year: 'numeric',
 		month: '2-digit',
