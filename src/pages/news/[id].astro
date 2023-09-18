@@ -4,8 +4,8 @@ import MySiteLayout from '../../layouts/MySiteLayout.astro';
 import { Image } from 'astro:assets';
 
 // Function
-import { getBlogs, getBlogDetail } from '../../functions/microcms';
-import { dateFormat } from '../../functions/dateFormat';
+import { getBlogs, getBlogDetail } from '../../library/microcms';
+import { dateFormat } from '../../library/dateFormat';
 
 export async function getStaticPaths() {
 	const response = await getBlogs({ fields: ['id'] });
