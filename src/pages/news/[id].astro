@@ -5,7 +5,7 @@ import { Image } from 'astro:assets';
 
 // Function
 import { getBlogs, getBlogDetail } from '../../library/microcms';
-import { dateformat } from '../../library/dateformatfunction';
+import { getDateFormat } from '../../library/dateformat';
 
 export async function getStaticPaths() {
 	const response = await getBlogs({ fields: ['id'] });
@@ -35,8 +35,8 @@ const blog = await getBlogDetail(id as string);
 	<div class="w-4/5 max-w-5xl mx-auto py-40">
 		<h1 class="text-4xl font-bold">{blog.title}</h1>
 		<div class="flex items-center mt-6">
-			<p class="text-gray-400 text-xs">公開日：{dateformat(blog.publishedAt)}</p>
-			<p class="text-gray-400 text-xs ml-3.5">最終更新日：{dateformat(blog.updatedAt)}</p>
+			<p class="text-gray-400 text-xs">公開日：{getDateFormat(blog.publishedAt)}</p>
+			<p class="text-gray-400 text-xs ml-3.5">最終更新日：{getDateFormat(blog.updatedAt)}</p>
 		</div>
 		<div class="flex items-center mt-2.5">
 			{
