@@ -21,7 +21,6 @@ export type Blog = {
         width: number;
         height: number;
     };
-
 }
 
 export type BlogResponse = {
@@ -29,6 +28,22 @@ export type BlogResponse = {
     offset: number;
     limit: number;
     contents: Blog[];
+}
+
+export type Categories = {
+    id: string,
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    revisedAt: string;
+    name: string;
+}
+
+export type CategoriesResponse = {
+    totalCount: number;
+    offset: number;
+    limit: number;
+    contents: Categories[];
 }
 
 // API呼び出し
@@ -42,4 +57,8 @@ export const getBlogDetail = async (contentId: string, queries?: MicroCMSQueries
         contentId,
         queries
     });
+}
+
+export const getCategories = async (queries?: MicroCMSQueries) => {
+    return await client.get<CategoriesResponse>({endpoint: 'categories', queries});
 }

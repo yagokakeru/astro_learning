@@ -41,11 +41,11 @@ const blog = await getBlogDetail(id as string);
 		<div class="flex items-center mt-2.5">
 			{
 				blog.category.map((cate: any) => {
-					return <p class="rounded border border-gray-400 p-1 text-xs bg-gray-100 mr-2.5">{cate}</p>;
+					return <a class="rounded border border-gray-400 p-1 text-xs bg-gray-100 mr-2.5" href={`/category/${cate.id}`}>{cate.name}</a>;
 				})
 			}
 		</div>
-		{(blog.thumbnail) && <Image class="w-full mt-12" src={blog.thumbnail.url} alt="サムネイル" width={blog.thumbnail.width} height={blog.thumbnail.height} />}
+		{(blog.thumbnail) ? <Image class="w-full mt-12" src={blog.thumbnail.url} alt="サムネイル" width={blog.thumbnail.width} height={blog.thumbnail.height} /> : <Image class="w-full mt-12" src="/ogp.jpg" alt="サムネイル" width="1200" height="630" />}
 		<div class="content mt-24 text-base leading-loose" set:html={blog.content}></div>
 	</div>
-</MySiteLayout>../../library/dateformatfunction
+</MySiteLayout>
