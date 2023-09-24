@@ -45,3 +45,20 @@ All commands are run from the root of the project, from a terminal:
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+## 🔍 機能別関連記事
+
+このサイトで使われている技術や機能を実現する方法をまとめました。
+
+### Astro × microCMSで記事一覧と記事ページを作成する
+[https://blog.microcms.io/astro-microcms-introduction/](https://blog.microcms.io/astro-microcms-introduction/)
+
+### microCMSでカテゴリー一覧ページを作成
+Next.jsを使った方法だけど参考になります。
+[https://blog.microcms.io/next-category-page/](https://blog.microcms.io/next-category-page/)
+
+### getStaticPaths()のpropsが受け取れない(undefindになる)時
+`astro.config.mjs`のoutputが`'server'`になっているかもしれません。
+`'hybrid'`にするとgetStaticPaths()のpropsを受け取れるようになろと思います。
+[https://docs.astro.build/ja/guides/server-side-rendering/#%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%81%A7ssr%E3%82%92%E6%9C%89%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B](https://docs.astro.build/ja/guides/server-side-rendering/#%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%81%A7ssr%E3%82%92%E6%9C%89%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B)
+[https://docs.astro.build/ja/core-concepts/routing/#%E5%8B%95%E7%9A%84%E3%83%AB%E3%83%BC%E3%83%86%E3%82%A3%E3%83%B3%E3%82%B0](https://docs.astro.build/ja/core-concepts/routing/#%E5%8B%95%E7%9A%84%E3%83%AB%E3%83%BC%E3%83%86%E3%82%A3%E3%83%B3%E3%82%B0)
