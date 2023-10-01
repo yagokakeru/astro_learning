@@ -1,0 +1,63 @@
+---
+// Components
+import MySiteLayout from '../../layouts/MySiteLayout.astro';
+import Main from '../../components/page/news/preview/Main';
+---
+
+<style lang="scss" is:global>
+	.content{
+		h1, h2{
+			font-weight: 700;
+			line-height: 1.5;
+			margin-top: 50px;
+		}
+		h1{
+			font-size: 24px;
+		}
+		h2{
+			font-size: 22px;
+		}
+
+		a{
+			color: blue;
+		}
+
+		p{
+			margin-top: 25px;
+		}
+
+		blockquote{
+			background-color: var(--lightGray);
+			margin-top: 25px;
+			padding: 25px 40px;
+			position: relative;
+
+			&::after, &::before{
+				content: "👣";
+				font-size: 32px;
+				font-weight: 700;
+				line-height: 1;
+				position: absolute;
+			}
+			&::after{
+				top: 5px;
+				left: 5px;
+			}
+			&::before{
+				bottom: 5px;
+				right: 5px;
+			}
+		}
+
+		pre{
+			background-color: var(--codeBg);
+			color: var(--codeColor);
+			margin-top: 25px;
+			padding: 15px;
+		}
+	} 
+</style>
+
+<MySiteLayout title={'プレビュー'} pagePath={''}>
+	<Main client:only="preact" />
+</MySiteLayout>
