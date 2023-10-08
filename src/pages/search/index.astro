@@ -1,0 +1,11 @@
+---
+// Components
+import MySiteLayout from '../../layouts/MySiteLayout.astro';
+import SearchButton from '../../components/page/search/SearchButton';
+import BlogSearch from '../../components/page/search/BlogSearch';
+---
+
+<MySiteLayout title="記事の検索" pagePath="/search">
+    <SearchButton client:visible />
+    <BlogSearch client:only="preact" />
+</MySiteLayout>
