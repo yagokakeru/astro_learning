@@ -1,0 +1,23 @@
+---
+// Components
+import MySiteLayout from '../../../layouts/MySiteLayout.astro';
+import Main from '../../../components/ui/PageMain.astro';
+import NewsList from '../../../components/ui/NewsList';
+import Pagenation from '../../../components/ui/Pagenation.astro'
+
+// Function
+import { getBlogs } from "../../../library/microcms";
+
+export async function getStaticPaths({ paginate }) {
+	const response = await getBlogs({ fields: ['id', 'title'] });
+	return paginate(response.contents, { pageSize: 1 });
+}
+
+const { page } = Astro.props;
+---
+
+<MySiteLayout title="News" pagePath="/news">
+	<Main title="News" />
+	<NewsList newsList={page.data} notArticle="該当記事はありません" />
+	<Pagenation page={page} />
+</MySiteLayout>

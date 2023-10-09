@@ -2,8 +2,15 @@
 // Components
 import MySiteLayout from '../../layouts/MySiteLayout.astro';
 import Main from '../../components/ui/PageMain.astro';
+import NewsList from '../../components/ui/NewsList';
+
+// Function
+import { getBlogs } from "../../library/microcms";
+
+const response = await getBlogs({ fields: ['id', 'title'] });
 ---
 
 <MySiteLayout title="News" pagePath="/news">
 	<Main title="News" />
+	<NewsList newsList={response} notArticle="該当記事はありません" />
 </MySiteLayout>

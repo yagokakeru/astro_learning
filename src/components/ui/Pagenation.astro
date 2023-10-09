@@ -1,0 +1,18 @@
+---
+const props = Astro.props;
+---
+
+<ul class="flex justify-center items-center gap-5 mt-14 w-full">
+    { (props.page.currentPage !== 1) && <a class="bg-gray-500 rounded text-white flex justify-center items-center w-7 h-7 transition-all duration-500 ease-out hover:bg-black" href={props.page.url.prev}><li>＜</li></a> }
+    {
+        [...Array(props.page.total)].map((_, i) => {
+            {
+                return (props.page.currentPage == i+1) ?
+                <a class="bg-black rounded text-white flex justify-center items-center w-7 h-7"href={`/news/page/${i+1}`}><li>{i+1}</li></a>
+                :
+                <a class="bg-gray-500 rounded text-white flex justify-center items-center w-7 h-7 transition-all duration-500 ease-out hover:bg-black"href={`/news/page/${i+1}`}><li>{i+1}</li></a>
+            }
+        })
+    }
+    { (props.page.currentPage !== props.page.lastPage) && <a class="bg-gray-500 rounded text-white flex justify-center items-center w-7 h-7 transition-all duration-500 ease-out hover:bg-black" href={props.page.url.next}><li>＞</li></a> }
+</ul>

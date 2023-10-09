@@ -2,6 +2,7 @@
 // Components
 import MySiteLayout from '../../layouts/MySiteLayout.astro';
 import Main from '../../components/ui/PageMain.astro';
+import NewsList from '../../components/ui/NewsList';
 
 // Function
 import { getBlogs, getCategories } from '../../library/microcms';
@@ -17,18 +18,9 @@ export async function getStaticPaths() {
 const { id } = Astro.params;
 const { name } = Astro.props;
 const blogsResponse = await getBlogs({ filters: `category[contains]${id}` });
-console.log(blogsResponse);
 ---
 
 <MySiteLayout title={`${name}カテゴリー一覧`} pagePath={`/category/${id}`}>
     <Main title={`${name}カテゴリー一覧`} />
-    <section class="bg-gray-700 py-36">
-        <ul class="mx-auto w-11/12">
-            {
-                blogsResponse.contents.map((content: any, index: number) => {
-                    return <a class={`border-t ${(blogsResponse.totalCount - 1 === index) && 'border-b'} border-white border-solid block text-[2vw] py-8 text-white`} href={`/news/${content.id}`}><li>{content.title}</li></a>
-                })
-            }
-        </ul>
-    </section>
+    <NewsList newsList={blogsResponse} notArticle="該当記事はありません" />
 </MySiteLayout>

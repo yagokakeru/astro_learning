@@ -15,6 +15,7 @@ export type Blog = {
     revisedAt: string;
     title: string;
     content: string;
+    newcontent: string;
     category: string[];
     thumbnail: {
         url: string;
