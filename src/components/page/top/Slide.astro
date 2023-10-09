@@ -1,0 +1,302 @@
+---
+const slideImg = [
+    'https://source.unsplash.com/SUIMrEKVOXc',
+    'https://source.unsplash.com/路上での車のヘッドライトのクローズアップ-ATYKn8yEBRs',
+    'https://source.unsplash.com/H5t17_WRtmE',
+    'https://source.unsplash.com/冷却ラックにチーズ入りのパン2枚-uSZW5GfDOT8',
+];
+---
+
+<style is:global>
+    canvas{
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+</style>
+
+<section class="py-28" id="js-wrapper">
+    <div class="swiper aspect-[4/3] overflow-hidden w-9/12 mx-auto relative" id="js-container">
+        <div class="swiper-wrapper">
+            {
+                slideImg.map(src => {
+                    return (
+                        <div class="swiper-slide">
+                            <img class="object-cover w-full h-full opacity-0" id="js-image" src={src} alt="">
+                        </div>
+                    )
+                })
+            }
+        </div>
+    </div>
+</section>
+
+<script>
+    // Dependencies
+    import Swiper from 'swiper';
+    import gsap from 'gsap';
+    import * as THREE from 'three';
+
+    // Shaders
+    import slideTransitionFrag from '../../../shaders/slideTransitionFrag.glsl';
+    import slideTransitionVert from '../../../shaders/slideTransitionVert.glsl';
+
+    // Types
+    import { Mesh, OrthographicCamera, PlaneGeometry, Scene, ShaderMaterial, WebGLRenderer, Texture } from 'three';
+
+    // CSS
+    import 'swiper/css';
+import { Image } from 'astro:assets';
+
+    // const swiper = new Swiper('.swiper', {});
+
+    class mvSlider {
+        containerDOM: HTMLElement;
+        swiperDOM: HTMLElement;
+        imagesDOM: HTMLImageElement[] | Element[];
+        size: {
+            width: number;
+            height: number;
+        }
+        scene: Scene;
+        camera: OrthographicCamera;
+        renderer: WebGLRenderer;
+        textures: Texture[];
+        material: ShaderMaterial;
+        geometry: PlaneGeometry;
+        mesh: Mesh;
+        disp: Texture;
+        dispImgSrc: string;
+        images: {
+            src: string,
+            naturalWidth: number,
+            naturalHeight: number
+        }[];
+        data: {
+            current: number;
+            prev: number;
+            next: number;
+            total: number;
+            direction: string;
+        }
+        timeoutId: number;
+
+        constructor() {
+            this.swiperDOM = document.querySelector('#js-container');
+            this.imagesDOM = [...document.querySelectorAll('#js-image')];
+
+            this.size = {
+                width: this.swiperDOM.offsetWidth,
+                height: this.swiperDOM.offsetHeight,
+            }
+            
+            this.scene = null;
+            this.camera = null;
+            this.renderer = null;
+            this.textures = [];
+            this.material = null;
+            this.geometry = null;
+            this.mesh = null;
+
+            this.disp = null;
+
+            this.dispImgSrc = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/58281/rock-_disp.png';
+            this.images = [];
+            this.imagesDOM.forEach((element: HTMLImageElement) => {
+                const image = document.createElement('img');
+                image.src = element.src;
+                this.images.push({
+                    src: image.src,
+                    naturalWidth: image.naturalWidth,
+                    naturalHeight: image.naturalHeight
+                });
+            });
+
+            this.data = {
+                current: null,
+                prev: null,
+                next: null,
+                total: null,
+                direction: 'next',
+            }
+
+            this.timeoutId = 0;
+
+            this.init();
+        }
+
+        init() {
+            this.bindAll();
+            this.swiper();
+            this.setScene();
+            this.setRenderer();
+            this.setCamera();
+            this.setTexture();
+            this.setMesh();
+            this.render();
+            this.onWindowResize();
+        }
+
+        bindAll() {
+            ['render'].forEach((fn) => {
+                this[fn] = this[fn].bind(this);
+            })
+        }
+
+        setScene() {
+            this.scene = new THREE.Scene();
+        }
+
+        setRenderer() {
+            this.renderer = new THREE.WebGLRenderer({ alpha: true });
+            this.renderer.setPixelRatio(window.devicePixelRatio);
+            this.renderer.setSize(this.size.width, this.size.height);
+            this.swiperDOM.appendChild(this.renderer.domElement);
+        }
+
+        setCamera() {
+            this.camera = new THREE.OrthographicCamera(
+                this.size.width / -2,
+                this.size.width / 2,
+                this.size.height / 2,
+                this.size.height / -2,
+                1,
+                1000
+            );
+            this.camera.position.z = 1;
+        }
+
+        render() {
+            this.renderer.render(this.scene, this.camera);
+        }
+
+        setTexture() {
+            const loader = new THREE.TextureLoader();
+
+            this.textures = [];
+            this.images.forEach(image => {
+                const texture = loader.load(image.src, this.render);
+
+                texture.minFilter = THREE.LinearFilter;
+                texture.generateMipmaps = false;
+
+                this.textures.push(texture);
+            });
+
+            this.disp = loader.load(this.dispImgSrc, this.render);
+            this.disp.magFilter = this.disp.minFilter = THREE.LinearFilter;
+            this.disp.wrapS = this.disp.wrapT = THREE.RepeatWrapping;
+        }
+
+        setMesh() {
+            this.material = new THREE.ShaderMaterial({
+                uniforms: {
+                    uImageAspect1: { value: new THREE.Vector2(this.images[0].naturalWidth, this.images[0].naturalHeight) },
+                    uImageAspect2: { value: new THREE.Vector2(this.images[1].naturalWidth, this.images[1].naturalHeight) },
+                    uPlaneAspect: { value: new THREE.Vector2(this.size.width, this.size.height) },
+                    uDispPower: { value: 0.0 },
+                    uIntensity: { value: 0.3 },
+                    uDisp: { value: this.disp },
+                    uTexture1: { value: this.textures[0] },
+                    uTexture2: { value: this.textures[1] },
+                },
+                transparent: true,
+                vertexShader: slideTransitionVert,
+                fragmentShader: slideTransitionFrag,
+            });
+            this.geometry = new THREE.PlaneGeometry(this.size.width, this.size.height);
+            this.mesh = new THREE.Mesh(this.geometry, this.material);
+
+            this.scene.add(this.mesh);
+        }
+
+        nextSlide(currentNum) {
+            this.transition();
+            this.data.current = currentNum;
+            this.data.next = this.data.current == this.data.total ? 0 : this.data.current + 1;
+            this.data.prev = this.data.current == 0 ? this.data.total : this.data.current - 1;
+        }
+
+        prevSlide(currentNum) {
+            this.transition();
+            this.data.current = currentNum;
+            this.data.next = this.data.current == this.data.total ? 0 : this.data.current + 1;
+            this.data.prev = this.data.current == 0 ? this.data.total : this.data.current - 1;
+        }
+
+        transition() {
+            gsap.to(this.material.uniforms.uDispPower, 1.5, {
+                value: 1,
+                ease: 'Power2.easeInOut',
+                onRepeat: this.changeTexture(),
+                onUpdate: this.render,
+                onComplete: () => {
+                    this.material.uniforms.uDispPower.value = 0.0;
+                    this.render.bind(this);
+                }
+            });
+        }
+
+        changeTexture() {
+            this.material.uniforms.uImageAspect1.value = new THREE.Vector2(this.images[this.data.current].naturalWidth, this.images[this.data.current].naturalHeight);
+            this.material.uniforms.uTexture1.value = this.textures[this.data.current];
+            if(this.data.direction == 'next'){
+                this.material.uniforms.uImageAspect2.value = new THREE.Vector2(this.images[this.data.next].naturalWidth, this.images[this.data.next].naturalHeight);
+                this.material.uniforms.uTexture2.value = this.textures[this.data.next];
+            }else{
+                this.material.uniforms.uImageAspect2.value = new THREE.Vector2(this.images[this.data.prev].naturalWidth, this.images[this.data.prev].naturalHeight);
+                this.material.uniforms.uTexture2.value = this.textures[this.data.prev];
+            }
+        }
+
+        swiper() {
+            const mvSwiper = new Swiper(this.swiperDOM, {
+                speed: 1000,
+                loop: true,
+                loopAdditionalSlides: 1,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                    waitForTransition: false,
+                },
+                on: {
+                    afterInit: (swiper) => {
+                        const slideTotal = swiper.slides.length - 1;
+                        this.data.current = swiper.realIndex;
+                        this.data.prev = this.data.current == 0 ? slideTotal : this.data.current - 1;
+                        this.data.next = this.data.current == slideTotal ? 0 : this.data.current + 1;
+                        this.data.total = swiper.slides.length - 1;
+                    },
+                    slidePrevTransitionStart: (swiper) => {
+                        this.data.direction = 'prev';
+                        this.prevSlide(swiper.realIndex);
+                    },
+                    slideNextTransitionStart: (swiper) => {
+                        this.data.direction = 'next';
+                        this.nextSlide(swiper.realIndex);
+                    },
+
+                }
+            });
+        }
+
+        onWindowResize() {
+            window.onresize = () => {
+                if (this.timeoutId) clearTimeout(this.timeoutId);
+
+                this.timeoutId = setTimeout(() => {
+                    this.size.width = this.swiperDOM.offsetWidth;
+                    this.size.height = this.swiperDOM.offsetHeight;
+
+                    this.renderer.setSize(this.size.width, this.size.height);
+                    this.camera.left = this.size.width / -2;
+                    this.camera.right = this.size.width / 2;
+                    this.camera.top = this.size.height / 2;
+                    this.camera.bottom = this.size.height / -2;
+                    this.camera.updateProjectionMatrix();
+                }, 200);
+            }
+        }
+    }
+    new mvSlider();
+</script>
